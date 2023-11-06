@@ -1,0 +1,2 @@
+# Shepbot
+Twitch Chatbot
