@@ -1,11 +1,9 @@
+from IrcMessage import IrcMessage
+from MessageHandler import on_message
 import websocket
 import _thread
 import time
 import rel
-
-def on_message(ws, message):
-    print("Got message")
-    print(message)
 
 def on_error(ws, error):
     print(error)
