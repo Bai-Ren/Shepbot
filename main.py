@@ -15,15 +15,14 @@ def on_close(ws, close_status_code, close_msg):
 
 def on_open(ws):
     print("Opened connection")
-    oauth_file = open("oauth.txt")
-    oauth_token = oauth_file.readline()
-    oauth_file.close()
-    nick_file = open("nick.txt")
-    nick_name = nick_file.readline()
-    nick_file.close()
-    ws.send("PASS oauth:" + oauth_token)
-    ws.send("NICK " + nick_name)
-    ws.send("JOIN #shadowthewoofawoo")
+    file = open("oauth.txt")
+    oauth = file.readline()
+    nick = file.readline()
+    channel = file.readline()
+    file.close()
+    ws.send("PASS oauth:" + oauth)
+    ws.send("NICK " + nick)
+    ws.send("JOIN #" + channel)
 
 if __name__ == "__main__":
     #websocket.enableTrace(True)
