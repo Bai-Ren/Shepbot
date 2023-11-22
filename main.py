@@ -1,9 +1,7 @@
-from IrcMessage import IrcMessage
-from MessageHandler import on_message
 import websocket
-import _thread
-import time
 import rel
+import Config
+from MessageHandler import on_message
 
 def on_error(ws, error):
     print(error)
@@ -11,16 +9,16 @@ def on_error(ws, error):
 def on_close(ws, close_status_code, close_msg):
     print("### closed ###")
 
-def on_open(ws):
+def on_open(ws: websocket.WebSocketApp):
     print("Opened connection")
-    file = open("oauth.txt")
-    oauth = file.readline()
-    nick = file.readline()
-    channel = file.readline()
-    file.close()
+    with open(Config.OauthFile) as file:
+        oauth = file.readline()
+    with open(Config.NickNameFile) as file:
+        nick = file.readline()
+    ws.send("CAP REQ twitch.tv/tags")
     ws.send("PASS oauth:" + oauth)
     ws.send("NICK " + nick)
-    ws.send("JOIN #" + channel)
+    ws.send("JOIN #" + Config.ChannelName)
 
 if __name__ == "__main__":
     #websocket.enableTrace(True)
