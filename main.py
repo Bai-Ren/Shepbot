@@ -1,32 +1,21 @@
+import logging
+import logging.config
 import websocket
 import rel
 import Config
-from MessageHandler import on_message
+import IrcMessageHandler
 
-def on_error(ws, error):
-    print(error)
-
-def on_close(ws, close_status_code, close_msg):
-    print("### closed ###")
-
-def on_open(ws: websocket.WebSocketApp):
-    print("Opened connection")
-    with open(Config.OauthFile) as file:
-        oauth = file.readline()
-    with open(Config.NickNameFile) as file:
-        nick = file.readline()
-    ws.send("CAP REQ twitch.tv/tags")
-    ws.send("PASS oauth:" + oauth)
-    ws.send("NICK " + nick)
-    ws.send("JOIN #" + Config.ChannelName)
+logging.config.fileConfig('logging.conf')
+logger = logging.getLogger("shepbot")
 
 if __name__ == "__main__":
     #websocket.enableTrace(True)
+    IrcMessageHandler.messageHandlerInit()
     ws = websocket.WebSocketApp("wss://irc-ws.chat.twitch.tv",
-                              on_open=on_open,
-                              on_message=on_message,
-                              on_error=on_error,
-                              on_close=on_close)
+                              on_open=IrcMessageHandler.on_open,
+                              on_message=IrcMessageHandler.on_message,
+                              on_error=IrcMessageHandler.on_error,
+                              on_close=IrcMessageHandler.on_close)
 
     ws.run_forever(dispatcher=rel, reconnect=5)  # Set dispatcher to automatic reconnection, 5 second reconnect delay if connection closed unexpectedly
     rel.signal(2, rel.abort)  # Keyboard Interrupt

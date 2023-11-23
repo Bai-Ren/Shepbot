@@ -1,10 +1,12 @@
 import websocket
 import IrcMessage
-from .Utilities import should_run
+from .Command import Command 
 
-enabled = True
-perms = []
-
-def run(ws: websocket.WebSocketApp, message: IrcMessage):
-    if should_run(enabled, perms, message):
-        ws.send("PRIVMSG #bairen0 :I see you " + message.source)
+class CommandTest(Command):
+    def run(self, ws: websocket.WebSocketApp, message: IrcMessage):
+        if self.should_run(message):
+            ws.send("PRIVMSG #bairen0 :I see you " + message.source)
+            
+    def __init__(self, enabled=True, perms=[]) -> None:
+        self.enabled = enabled
+        self.perms = perms

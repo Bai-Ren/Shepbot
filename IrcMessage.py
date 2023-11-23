@@ -33,6 +33,6 @@ class IrcMessage:
             self.data = ""
         else:
             self.command = parts[i]
-            self.channel = parts[i+1]
+            self.channel = parts[i+1][1:]
             dataIndex += len(parts[i]) + len(parts[i+1]) + 3
             self.data = rawMessage[dataIndex:]

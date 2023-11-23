@@ -1,6 +1,3 @@
-WriteLogsToFile = False
-LogFileName = ""
-WriteLogsToStdout = True
-ChannelName = "bairen0"
-NickNameFile = "..\\nick.txt"
-OauthFile = "..\\oauth.txt"
+channel_name = "bairen0"
+nickname_file = "..\\nick.txt"
+oauth_file = "..\\oauth.txt"
