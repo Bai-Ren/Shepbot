@@ -1,4 +1,5 @@
 import logging
+import rel
 import websocket
 import Config
 from IrcMessage import IrcMessage
@@ -47,7 +48,6 @@ function_dict = {"PING" : on_ping,
 def on_message(ws: websocket.WebSocketApp, incoming_data: str):
     raw_messages = incoming_data.splitlines()
     for raw_message in raw_messages:
-        logger.debug(raw_message)
         irc_message = IrcMessage(raw_message)
         if irc_message.command in function_dict:
             function_dict[irc_message.command](ws, irc_message)
@@ -73,3 +73,9 @@ def on_open(ws: websocket.WebSocketApp):
 
 def messageHandlerInit():
     channel_dict["bairen0"] = ChannelShep()
+    ws = websocket.WebSocketApp("wss://irc-ws.chat.twitch.tv",
+                              on_open=on_open,
+                              on_message=on_message,
+                              on_error=on_error,
+                              on_close=on_close)
+    ws.run_forever(dispatcher=rel, reconnect=5)  # Set dispatcher to automatic reconnection, 5 second reconnect delay if connection closed unexpectedly
