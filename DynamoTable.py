@@ -7,11 +7,12 @@ class DynamoTable:
         table.load()
         self.table = table
     
-    def increment_counter(self, id: str, increment: int):
+    def increment_counter(self, name: str, channel: str, increment: int):
         return self.table.update_item(
-            Key={"Id" : id},
-            UpdateExpression="set val = val + :i",
-            ExpressionAttributeValues={":i" : decimal.Decimal(increment)},
+            Key={"name" : name, "channel" : channel},
+            UpdateExpression="ADD #c :i",
+            ExpressionAttributeNames={"#c" : "count"},
+            ExpressionAttributeValues={":i" : decimal.Decimal(1)},
             ReturnValues="UPDATED_NEW"
         )
     
