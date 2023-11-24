@@ -12,7 +12,7 @@ class DynamoTable:
             Key={"name" : name, "channel" : channel},
             UpdateExpression="ADD #c :i",
             ExpressionAttributeNames={"#c" : "count"},
-            ExpressionAttributeValues={":i" : decimal.Decimal(1)},
+            ExpressionAttributeValues={":i" : decimal.Decimal(increment)},
             ReturnValues="UPDATED_NEW"
         )
     
