@@ -8,6 +8,7 @@ websocket-client = {extras = ["optional"], version = "*"}
 rel = "*"
 boto3 = "*"
 boto3-stubs = {extras = ["essential"], version = "*"}
+requests = "*"
 
 [dev-packages]
 

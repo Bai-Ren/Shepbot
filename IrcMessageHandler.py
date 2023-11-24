@@ -72,8 +72,9 @@ def on_open(ws: websocket.WebSocketApp):
     ws.send(f"NICK {nick}")
     ws.send(f"JOIN #{Config.channel_name}")
 
-def messageHandlerInit():
-    channel_dict["bairen0"] = ChannelBairen()
+def messageHandlerInit(eventsub):
+    channel_dict["bairen0"] = ChannelBairen(eventsub)
+    channel_dict["bairen0"].test_api()
     ws = websocket.WebSocketApp("wss://irc-ws.chat.twitch.tv",
                               on_open=on_open,
                               on_message=on_message,

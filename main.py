@@ -9,8 +9,7 @@ logger = logging.getLogger("shepbot")
 
 if __name__ == "__main__":
     #websocket.enableTrace(True)
-    eventsub = EventsubHandler()
-    messageHandlerInit()
+    eventsub = EventsubHandler(setup_callback = messageHandlerInit)
 
     rel.signal(2, rel.abort)  # Keyboard Interrupt
     rel.dispatch()

@@ -1,5 +1,6 @@
 import json
 import logging
+from time import sleep
 import rel
 import websocket
 
@@ -18,6 +19,11 @@ class EventsubHandler:
         else:
             self.session_id = data["payload"]["session"]["id"]
             logger.info(f"Got session_id:{self.session_id}")
+            if self.setup_callback is not None:
+                self.setup_callback(self)
+                self.setup_callback = None
+
+
         
     def on_reconnect(self, ws: websocket.WebSocketApp, data: dict):
         logger.info("Reconnect message received")
@@ -48,6 +54,8 @@ class EventsubHandler:
                         self.on_reconnect(ws, json_message)
                     case "session_keepalive":
                         pass
+                    case "notification":
+                        logger.debug(f"Received notification:{json_message}")
                     case _:
                         message_type = json_message["metadata"]["message_type"]
                         logger.warning(f"Unrecognized message_type:{message_type}")
@@ -64,10 +72,11 @@ class EventsubHandler:
     def on_open(self, ws: websocket.WebSocketApp):
         logger.info("opened connection")
 
-    def __init__(self):
+    def __init__(self, setup_callback = None):
         self.old_ws = None
         self.active_ws = None
         self.session_id = ""
+        self.setup_callback = setup_callback
         ws = websocket.WebSocketApp("wss://eventsub.wss.twitch.tv/ws",
                                 on_open=self.on_open,
                                 on_message=self.on_message,
