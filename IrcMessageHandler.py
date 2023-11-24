@@ -4,6 +4,7 @@ import websocket
 import Config
 from IrcMessage import IrcMessage
 from ChannelShep import ChannelShep
+from ChannelBairen import ChannelBairen
 
 logger = logging.getLogger(f"shepbot.{__name__}")
 
@@ -72,7 +73,7 @@ def on_open(ws: websocket.WebSocketApp):
     ws.send(f"JOIN #{Config.channel_name}")
 
 def messageHandlerInit():
-    channel_dict["bairen0"] = ChannelShep()
+    channel_dict["bairen0"] = ChannelBairen()
     ws = websocket.WebSocketApp("wss://irc-ws.chat.twitch.tv",
                               on_open=on_open,
                               on_message=on_message,
