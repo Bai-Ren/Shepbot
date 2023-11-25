@@ -19,11 +19,7 @@ class EventsubHandler:
         else:
             self.session_id = data["payload"]["session"]["id"]
             logger.info(f"Got session_id:{self.session_id}")
-            if self.setup_callback is not None:
-                self.setup_callback(self)
-                self.setup_callback = None
-
-
+            self.channel.on_eventsub_welcome()
         
     def on_reconnect(self, ws: websocket.WebSocketApp, data: dict):
         logger.info("Reconnect message received")
@@ -72,11 +68,11 @@ class EventsubHandler:
     def on_open(self, ws: websocket.WebSocketApp):
         logger.info("opened connection")
 
-    def __init__(self, setup_callback = None):
+    def __init__(self, channel):
         self.old_ws = None
         self.active_ws = None
         self.session_id = ""
-        self.setup_callback = setup_callback
+        self.channel = channel
         ws = websocket.WebSocketApp("wss://eventsub.wss.twitch.tv/ws",
                                 on_open=self.on_open,
                                 on_message=self.on_message,
