@@ -26,5 +26,4 @@ class ChannelShep(Channel):
             id = response.json()['data'][0]['id']
             TwitchApi.get_channel_info(id, self.user_access_token)
             TwitchApi.create_eventsub_subscription("channel.chat.notification", "1", {"broadcaster_user_id" : id, "user_id" : id}, self.eventsub.session_id, self.user_access_token)
-        
-        
+            

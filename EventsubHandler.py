@@ -4,6 +4,8 @@ from time import sleep
 import rel
 import websocket
 
+EVENTSUB_WSS = "wss://eventsub.wss.twitch.tv/ws"
+
 logger = logging.getLogger(f"shepbot.{__name__}")
 
 class EventsubHandler:
@@ -73,7 +75,7 @@ class EventsubHandler:
         self.active_ws = None
         self.session_id = ""
         self.channel = channel
-        ws = websocket.WebSocketApp("wss://eventsub.wss.twitch.tv/ws",
+        ws = websocket.WebSocketApp(EVENTSUB_WSS,
                                 on_open=self.on_open,
                                 on_message=self.on_message,
                                 on_error=self.on_error,
