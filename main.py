@@ -13,8 +13,10 @@ if __name__ == "__main__":
     bairen = ChannelBairen()
     shep = ChannelShep()
 
-    IrcMessageHandler({"bairen0" : bairen,
-                       "wv_shep" : shep})
+    handler = IrcMessageHandler()
+
+    handler.register_channel(bairen)
+    handler.register_channel(shep)
     
     rel.signal(2, rel.abort)  # Keyboard Interrupt
     rel.dispatch()
