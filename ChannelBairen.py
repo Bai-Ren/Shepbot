@@ -3,6 +3,7 @@ from Channel import Channel
 from Commands.Test import CommandTest
 from Commands.ModTest import CommandModTest
 from Commands.Sniffa import CommandSniffa
+from Commands.CustomTextCommands import CommandCreateCustomTextCommand, CommandDeleteCustomTextCommand, CommandUpdateCustomTextCommand
 import TwitchApi
 
 logger = logging.getLogger(f"shepbot.{__name__}")
@@ -16,6 +17,9 @@ class ChannelBairen(Channel):
         self.command_dict["!test"] = CommandTest()
         self.command_dict["!modtest"] = CommandModTest()
         self.command_dict["!sniffa"] = CommandSniffa(self.table_counters)
+        self.command_dict["!createcommand"] = CommandCreateCustomTextCommand(self)
+        self.command_dict["!updatecommand"] = CommandUpdateCustomTextCommand(self)
+        self.command_dict["!deletecommand"] = CommandDeleteCustomTextCommand(self)
 
     def on_eventsub_welcome(self):
         self.test_api()
