@@ -13,8 +13,8 @@ class ChannelShep(Channel):
 
     def __init__(self) -> None:
         super().__init__()
-        self.command_dict["!test"] = CommandTest()
-        self.command_dict["!modtest"] = CommandModTest()
+        #self.command_dict["!test"] = CommandTest()
+        #self.command_dict["!modtest"] = CommandModTest()
         self.command_dict["!sniffa"] = CommandSniffa(self.table_counters)
 
     def on_eventsub_welcome(self):
