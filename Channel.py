@@ -15,6 +15,7 @@ class Channel:
         self.dyn_resource = boto3.resource('dynamodb')
         self.table_counters = DynamoTable(self.dyn_resource, "shepbot-counters-test")
         self.command_dict = {}
+        self.event_dict = {}
         self.eventsub = EventsubHandler(self)
         if self.access_token_filename is not None:
             with open(self.access_token_filename) as file:
@@ -27,6 +28,11 @@ class Channel:
         firstWord = message.data.split(" ")[0] 
         if firstWord in self.command_dict:
             self.command_dict[firstWord].run(ws, message)
+
+    def on_event(self, notification):
+        subscription_id = notification["payload"]["subscription"]["id"]
+        if subscription_id in self.event_dict:
+            self.event_dict[subscription_id].on_event(notification)
 
     def on_eventsub_welcome(self):
         pass
