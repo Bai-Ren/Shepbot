@@ -32,5 +32,5 @@ class EventForBeans():
         self.bean_threshold = bean_threshold
         self.sub_value = {'1000' : tier1_sub_value,
                           '2000' : tier2_sub_value,
-                          '3000' : tier2_sub_value}
+                          '3000' : tier3_sub_value}
         self.bit_value = bit_value
