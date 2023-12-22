@@ -54,6 +54,7 @@ class EventsubHandler:
                         pass
                     case "notification":
                         logger.debug(f"Received notification:{json_message}")
+                        self.channel.on_event(json_message)
                     case _:
                         message_type = json_message["metadata"]["message_type"]
                         logger.warning(f"Unrecognized message_type:{message_type}")
