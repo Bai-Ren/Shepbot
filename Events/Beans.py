@@ -18,7 +18,7 @@ class EventForBeans():
             logger.info(f"No beans needed, but {self.total} accrued points")
 
     def on_event(self, notification):
-        match notification["subscription"]["type"]:
+        match notification["payload"]["subscription"]["type"]:
             case "channel.subscribe":
                 if not notification["payload"]["event"]["is_gift"]: #should be counted in channel.subscription.gift
                     self.add(self.sub_value[notification["payload"]["event"]["tier"]])
