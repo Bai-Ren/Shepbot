@@ -14,14 +14,14 @@ class EventForBeans():
     def on_event(self, notification):
         match notification["subscription"]["type"]:
             case "channel.subscribe":
-                if not notification["event"]["is_gift"]: #should be counted in channel.subscription.gift
-                    self.add(self.sub_value[notification["event"]["tier"]])
+                if not notification["payload"]["event"]["is_gift"]: #should be counted in channel.subscription.gift
+                    self.add(self.sub_value[notification["payload"]["event"]["tier"]])
             case "channel.subscription.gift":
-                self.add(self.sub_value[notification["event"]["tier"]] * notification["event"]["total"])
+                self.add(self.sub_value[notification["payload"]["event"]["tier"]] * notification["payload"]["event"]["total"])
             case "channel.subscription.message":
-                self.add(self.sub_value[notification["event"]["tier"]])
+                self.add(self.sub_value[notification["payload"]["event"]["tier"]])
             case "channel.cheer":
-                self.add(self.bit_value * self.sub_value[notification["event"]["bits"]])
+                self.add(self.bit_value * self.sub_value[notification["payload"]["event"]["bits"]])
             case _:
                 logger.error("Unknown subscription type found when processing bean event")
 
