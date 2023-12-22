@@ -10,6 +10,12 @@ class EventForBeans():
             total_beans = self.total // self.bean_threshold
             self.total -= total_beans * self.bean_threshold
             logger.info(f"Need to get {total_beans} beans with {self.total} leftover points")
+            if total_beans == 1:
+                self.channel.privmsg(f"ARF you owe us a bean")
+            else:
+                self.channel.privmsg(f"ARF you owe us {total_beans} beans")
+        else:
+            logger.info(f"No beans needed, but {self.total} accrued points")
 
     def on_event(self, notification):
         match notification["subscription"]["type"]:

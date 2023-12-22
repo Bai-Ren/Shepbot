@@ -76,6 +76,7 @@ class IrcMessageHandler:
     def register_channel(self, channel: Channel):
         self.channel_dict[channel.channel_name] = channel
         self.ws.send(f"JOIN #{channel.channel_name}")
+        channel.ws = self.ws
 
     def __init__(self, channel_dict: dict={}):
         self.channel_dict = channel_dict

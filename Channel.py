@@ -16,6 +16,7 @@ class Channel:
         self.table_counters = DynamoTable(self.dyn_resource, "shepbot-counters-test")
         self.command_dict = {}
         self.event_dict = {}
+        self.ws = None
         self.eventsub = EventsubHandler(self)
         if self.access_token_filename is not None:
             with open(self.access_token_filename) as file:
@@ -36,6 +37,12 @@ class Channel:
 
     def on_eventsub_welcome(self):
         pass
+
+    def privmsg(self, message:str):
+        if self.ws is None:
+            logger.error(f"Websocket not initialized for privmsg on channel: {self.channel_name}")
+        else:
+            self.ws.send(f"PRIVMSG #{self.channel_name} :{message}")
 
         
 
