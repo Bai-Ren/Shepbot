@@ -14,14 +14,16 @@ class EventsubHandler:
         if self.old_ws is not None:
             self.old_ws.close()
             self.old_ws = None
-        self.active_ws = ws
-
-        if "session" not in data["payload"] or "id" not in data["payload"]["session"]:
-            logger.error("No session id provided for eventsubs")
+            self.active_ws = ws
         else:
-            self.session_id = data["payload"]["session"]["id"]
-            logger.info(f"Got session_id:{self.session_id}")
-            self.channel.on_eventsub_welcome()
+            self.active_ws = ws
+            if "session" not in data["payload"] or "id" not in data["payload"]["session"]:
+                logger.error("No session id provided for eventsubs")
+            else:
+                self.session_id = data["payload"]["session"]["id"]
+                logger.info(f"Got session_id:{self.session_id}")
+                self.channel.on_eventsub_welcome()
+                rel.abort()
         
     def on_reconnect(self, ws: websocket.WebSocketApp, data: dict):
         logger.info("Reconnect message received")
