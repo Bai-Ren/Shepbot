@@ -21,6 +21,6 @@ if __name__ == "__main__":
     rel.dispatch()
 
     start_channel(ChannelBairen, handler)
-    #start_channel(ChannelShep, handler)
+    start_channel(ChannelShep, handler)
     
     rel.dispatch()

@@ -10,7 +10,6 @@ logger = logging.getLogger(f"shepbot.{__name__}")
 
 class ChannelShep(Channel):
     channel_name = "wv_shep"
-    access_token_filename = "..\\wvshepread.txt"
 
     def __init__(self) -> None:
         super().__init__()
@@ -22,15 +21,25 @@ class ChannelShep(Channel):
         self.setup_beans()
 
     def setup_beans(self):
-        response = TwitchApi.get_user_info('wv_shep', self.user_access_token)
-        if response is not None:
-            beans = EventForBeans(self) # One bean counter for all three eventsub types
-            id = response.json()['data'][0]['id']
-            TwitchApi.get_channel_info(id, self.user_access_token)
-            response = TwitchApi.create_eventsub_subscription("channel.subscribe", "1", {"broadcaster_user_id" : id}, self.eventsub.session_id, self.user_access_token)
-            self.event_dict[response.json()['data'][0]['id']] = beans
-            response = TwitchApi.create_eventsub_subscription("channel.subscription.message", "1", {"broadcaster_user_id" : id}, self.eventsub.session_id, self.user_access_token)
-            self.event_dict[response.json()['data'][0]['id']] = beans
-            response = TwitchApi.create_eventsub_subscription("channel.subscription.gift", "1", {"broadcaster_user_id" : id}, self.eventsub.session_id, self.user_access_token)
-            self.event_dict[response.json()['data'][0]['id']] = beans
-            
+        retries = 3
+        while retries > 0:
+            try:
+                access_token = self.get_access_token()["access_token"]
+                response = TwitchApi.get_user_info('wv_shep', access_token)
+                if response is not None:
+                    logger.debug(response.text)
+                    beans = EventForBeans(self) # One bean counter for all three eventsub types
+                    id = response.json()['data'][0]['id']
+                    response = TwitchApi.create_eventsub_subscription("channel.subscribe", "1", {"broadcaster_user_id" : id}, self.eventsub.session_id, access_token)
+                    self.event_dict[response.json()['data'][0]['id']] = beans
+                    response = TwitchApi.create_eventsub_subscription("channel.subscription.message", "1", {"broadcaster_user_id" : id}, self.eventsub.session_id, access_token)
+                    self.event_dict[response.json()['data'][0]['id']] = beans
+                    response = TwitchApi.create_eventsub_subscription("channel.subscription.gift", "1", {"broadcaster_user_id" : id}, self.eventsub.session_id, access_token)
+                    self.event_dict[response.json()['data'][0]['id']] = beans
+            except TwitchApi.UnauthorizedException:
+                retries -= 1
+                self.refresh_access_token()
+                continue
+            except Exception as e:
+                logger.error(f"Unknown exception:{e}")
+            break
