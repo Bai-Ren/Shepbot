@@ -18,8 +18,9 @@ if __name__ == "__main__":
     rel.signal(2, rel.abort)  # Keyboard Interrupt
 
     handler = IrcMessageHandler()
+    rel.dispatch()
 
     start_channel(ChannelBairen, handler)
-    start_channel(ChannelShep, handler)
+    #start_channel(ChannelShep, handler)
     
     rel.dispatch()
