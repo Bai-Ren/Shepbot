@@ -1,6 +1,7 @@
 import decimal
 import logging
 from mypy_boto3_dynamodb import DynamoDBServiceResource
+from botocore.exceptions import ClientError
 
 logger = logging.getLogger(f"shepbot.{__name__}")
 

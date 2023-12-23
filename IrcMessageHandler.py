@@ -4,6 +4,7 @@ import websocket
 import Config
 from IrcMessage import IrcMessage
 from Channel import Channel
+from TwitchApi import validate_and_refresh_channel_secret
 
 IRC_WSS = "wss://irc-ws.chat.twitch.tv"
 
@@ -27,6 +28,7 @@ class IrcMessageHandler:
 
     def on_001(self, ws: websocket.WebSocketApp, message: IrcMessage):
         logger.debug("Authenticated successfully")
+        rel.abort()
 
     def on_ignored_command(self, ws: websocket.WebSocketApp, message: IrcMessage):
         logger.debug(f"Recieved {message.command} silently ignoring")
@@ -56,22 +58,18 @@ class IrcMessageHandler:
             else:
                 logger.warning("Didn't recognize command: " + irc_message.command)
 
-    def on_error(self, ws: websocket.WebSocketApp, error):
-        logger.info(error)
+    def on_error(self, ws: websocket.WebSocketApp, error:Exception):
+        logger.error(error)
 
     def on_close(self, ws: websocket.WebSocketApp, close_status_code, close_msg):
         logger.info("### closed ###")
 
     def on_open(self, ws: websocket.WebSocketApp):
         logger.info("Opened connection")
-        with open(Config.oauth_file) as file:
-            oauth = file.readline()
-        with open(Config.nickname_file) as file:
-            nick = file.readline()
+        access_token = validate_and_refresh_channel_secret('pb_shepbot')
         ws.send("CAP REQ twitch.tv/tags")
-        ws.send(f"PASS oauth:{oauth}")
-        ws.send(f"NICK {nick}")
-        ws.send(f"JOIN #{Config.channel_name}")
+        ws.send(f"PASS oauth:{access_token}")
+        ws.send(f"NICK pb_shepbot")
 
     def register_channel(self, channel: Channel):
         self.channel_dict[channel.channel_name] = channel

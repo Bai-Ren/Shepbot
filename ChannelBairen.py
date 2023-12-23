@@ -10,7 +10,6 @@ logger = logging.getLogger(f"shepbot.{__name__}")
 
 class ChannelBairen(Channel):
     channel_name = "bairen0"
-    access_token_filename = "..\\bairen0read.txt"
 
     def __init__(self) -> None:
         super().__init__()
@@ -25,11 +24,20 @@ class ChannelBairen(Channel):
         self.test_api()
 
     def test_api(self):
-        response = TwitchApi.get_user_info('bairen0', self.user_access_token)
-        if response is not None:
-            id = response.json()['data'][0]['id']
-            TwitchApi.get_channel_info(id, self.user_access_token)
-            TwitchApi.create_eventsub_subscription("channel.chat.notification", "1", {"broadcaster_user_id" : id, "user_id" : id}, self.eventsub.session_id, self.user_access_token)
-        
-        
-
+        retries = 3
+        while retries > 0:
+            try:
+                access_token = self.get_access_token()["access_token"]
+                response = TwitchApi.get_user_info('bairen0', access_token)
+                if response is not None:
+                    logger.debug(response.text)
+                    id = response.json()['data'][0]['id']
+                    TwitchApi.get_channel_info(id, access_token)
+                    TwitchApi.create_eventsub_subscription("channel.chat.notification", "1", {"broadcaster_user_id" : id, "user_id" : id}, self.eventsub.session_id, access_token)
+            except TwitchApi.UnauthorizedException:
+                retries -= 1
+                self.refresh_access_token()
+                continue
+            except Exception as e:
+                logger.error(f"Unknown exception:{e}")
+            break

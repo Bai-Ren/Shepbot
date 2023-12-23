@@ -4,6 +4,7 @@ import websocket
 from DynamoTable import DynamoTable
 from IrcMessage import IrcMessage
 from EventsubHandler import EventsubHandler
+from SecretsManager import get_channel_secret,refresh_channel_secret
 
 logger = logging.getLogger(f"shepbot.{__name__}")
 
@@ -44,5 +45,8 @@ class Channel:
         else:
             self.ws.send(f"PRIVMSG #{self.channel_name} :{message}")
 
-        
+    def get_access_token(self):
+        return get_channel_secret(self.channel_name)
 
+    def refresh_access_token(self):
+        return refresh_channel_secret(self.channel_name)
