@@ -50,3 +50,6 @@ class Channel:
 
     def refresh_access_token(self):
         return refresh_channel_secret(self.channel_name)
+    
+    def on_stream_start(self):
+        pass
