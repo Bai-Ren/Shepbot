@@ -1,9 +1,11 @@
 import logging
+import websocket
 from Channel import Channel
 from Commands.Test import CommandTest
 from Commands.ModTest import CommandModTest
 from Commands.Sniffa import CommandSniffa
 from Events.Beans import EventForBeans
+from IrcMessage import IrcMessage
 import TwitchApi
 
 logger = logging.getLogger(f"shepbot.{__name__}")
@@ -64,3 +66,13 @@ class ChannelShep(Channel):
             except Exception as e:
                 logger.error(f"Unknown exception:{e}")
             break
+
+    def on_chat(self, ws: websocket.WebSocketApp, message: IrcMessage):
+        logger.debug(f"{self.channel_name} channel has a message")
+        firstWord = message.data.split(" ")[0] 
+        if firstWord in self.command_dict:
+            self.command_dict[firstWord].run(ws, message)
+        else:
+            words = message.data.lower().replace(".","").split(" ")
+            if "stinky" in words or "stimky" in words:
+                self.privmsg(f"@{message.source} 😐")
