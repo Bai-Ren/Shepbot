@@ -28,7 +28,7 @@ class IrcMessageHandler:
 
     def on_001(self, ws: websocket.WebSocketApp, message: IrcMessage):
         logger.debug("Authenticated successfully")
-        rel.abort()
+        #rel.abort()
 
     def on_ignored_command(self, ws: websocket.WebSocketApp, message: IrcMessage):
         logger.debug(f"Recieved {message.command} silently ignoring")

@@ -8,19 +8,16 @@ from IrcMessageHandler import IrcMessageHandler
 logging.config.fileConfig('logging.conf')
 logger = logging.getLogger("shepbot")
 
-def start_channel(channel, handler):
-    new_channel = channel()
-    handler.register_channel(new_channel)
-    rel.dispatch()
-
 if __name__ == "__main__":
     #websocket.enableTrace(True)
-    rel.signal(2, rel.abort)  # Keyboard Interrupt
+
+    bairen = ChannelBairen()
+    shep = ChannelShep()
 
     handler = IrcMessageHandler()
-    rel.dispatch()
-
-    start_channel(ChannelBairen, handler)
-    start_channel(ChannelShep, handler)
     
+    handler.register_channel(bairen)
+    handler.register_channel(shep)
+
+    rel.signal(2, rel.abort)  # Keyboard Interrupt
     rel.dispatch()

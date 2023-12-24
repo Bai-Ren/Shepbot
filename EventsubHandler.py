@@ -23,7 +23,6 @@ class EventsubHandler:
                 self.session_id = data["payload"]["session"]["id"]
                 logger.info(f"Got session_id:{self.session_id}")
                 self.channel.on_eventsub_welcome()
-                rel.abort()
         
     def on_reconnect(self, ws: websocket.WebSocketApp, data: dict):
         logger.info("Reconnect message received")
