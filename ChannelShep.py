@@ -55,7 +55,7 @@ class ChannelShep(Channel):
                 response = TwitchApi.get_user_info(self.channel_name, access_token)
                 if response is not None:
                     id = response.json()['data'][0]['id']
-                    response = TwitchApi.create_eventsub_subscription("channel.online", "1", {"broadcaster_user_id" : id}, self.eventsub.session_id, access_token)
+                    response = TwitchApi.create_eventsub_subscription("stream.online", "1", {"broadcaster_user_id" : id}, self.eventsub.session_id, access_token)
                     self.event_dict[response.json()['data'][0]['id']] = self.beans
             except TwitchApi.UnauthorizedException:
                 retries -= 1
