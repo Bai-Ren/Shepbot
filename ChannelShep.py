@@ -29,7 +29,7 @@ class ChannelShep(Channel):
         while retries > 0:
             try:
                 access_token = self.get_access_token()["access_token"]
-                response = TwitchApi.get_user_info('wv_shep', access_token)
+                response = TwitchApi.get_user_info(self.channel_name, access_token)
                 if response is not None:
                     self.beans = EventForBeans(self) # One bean counter for all three eventsub types
                     id = response.json()['data'][0]['id']
@@ -52,7 +52,7 @@ class ChannelShep(Channel):
         while retries > 0:
             try:
                 access_token = self.get_access_token()["access_token"]
-                response = TwitchApi.get_user_info('wv_shep', access_token)
+                response = TwitchApi.get_user_info(self.channel_name, access_token)
                 if response is not None:
                     id = response.json()['data'][0]['id']
                     response = TwitchApi.create_eventsub_subscription("channel.online", "1", {"broadcaster_user_id" : id}, self.eventsub.session_id, access_token)
