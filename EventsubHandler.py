@@ -1,8 +1,8 @@
 import json
 import logging
-from time import sleep
 import rel
 import websocket
+import StartupQueue
 
 EVENTSUB_WSS = "wss://eventsub.wss.twitch.tv/ws"
 
@@ -23,7 +23,7 @@ class EventsubHandler:
                 self.session_id = data["payload"]["session"]["id"]
                 logger.info(f"Got session_id:{self.session_id}")
                 self.channel.on_eventsub_welcome()
-                rel.abort()
+                StartupQueue.pop()
         
     def on_reconnect(self, ws: websocket.WebSocketApp, data: dict):
         logger.info("Reconnect message received")
